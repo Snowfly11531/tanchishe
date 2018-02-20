@@ -1,0 +1,199 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script type="text/javascript">
+    window.width=document.documentElement.clientWidth || document.body.clientWidth;
+    function snake(number,inflactionNum){   //蛇的数据结构
+	    this.number=number;
+		this.body=new Array(100);
+		this.direction=new Array(100);
+		this.inflactionNum=inflactionNum;
+		this.inflaction=new Array(1000);
+		this.inflactionDegree=new Array(1000);
+		for(var i=0;i<1000;i++){
+			this.inflactionDegree[i]=0;
+		}
+		this.discard=0;
+		this.create=function(){
+			for(var i=0;i<this.number;i++){
+				this.direction[i]=0;
+				this.body[i]=document.createElement("div");
+				this.body[i].style.position="absolute";
+				this.body[i].style.left=parseInt(width/2)-5+"px";
+				this.body[i].style.top=254+10*i+"px";
+				this.body[i].style.width="10px";
+				this.body[i].style.height="10px";
+				this.body[i].style.backgroundColor="rgba("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+")";
+				document.body.appendChild(this.body[i]);
+			}
+		};
+		this.add=function(){
+			this.body[this.number]=document.createElement("div");
+			this.body[this.number].style.position="absolute";
+			this.body[this.number].style.width="10px";
+			this.body[this.number].style.height="10px";	
+            this.body[this.number].style.backgroundColor="rgba("+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+","+parseInt(Math.random()*255)+")";	
+            switch(this.direction[this.number-1]){
+				case 0:
+				    this.body[this.number].style.top=parseInt(this.body[this.number-1].style.top.match(/\d+/)[0])+10+"px";
+					this.body[this.number].style.left=parseInt(this.body[this.number-1].style.left.match(/\d+/)[0])+"px";
+					this.direction[this.number]=0;
+					break;
+				case 1:
+				    this.body[this.number].style.top=parseInt(this.body[this.number-1].style.top.match(/\d+/)[0])+"px";
+					this.body[this.number].style.left=parseInt(this.body[this.number-1].style.left.match(/\d+/)[0])-10+"px";
+					this.direction[this.number]=1;
+					break;
+				case 2:
+				    this.body[this.number].style.top=parseInt(this.body[this.number-1].style.top.match(/\d+/)[0])-10+"px";
+					this.body[this.number].style.left=parseInt(this.body[this.number-1].style.left.match(/\d+/)[0])+"px";
+					this.direction[this.number]=2;
+					break;
+				case 3:
+				    this.body[this.number].style.top=parseInt(this.body[this.number-1].style.top.match(/\d+/)[0])+"px";
+					this.body[this.number].style.left=parseInt(this.body[this.number-1].style.left.match(/\d+/)[0])+10+"px";
+					this.direction[this.number]=3;
+					break;
+			};
+			document.body.appendChild(this.body[this.number]);
+           	this.number++;	
+		};
+	}
+	function apple(){  //苹果数据结构
+		this.appleDiv=document.createElement("div");
+		this.appleDiv.style.position="absolute";
+		this.appleDiv.style.height="10px";
+		this.appleDiv.style.width="10px";
+		this.appleDiv.style.backgroundColor="#000";
+		for(var i=0;;i++){
+			this.appleDiv.style.top=4+10*parseInt(Math.random()*50)+"px";
+			this.appleDiv.style.left=(parseInt(width/2)-255)+10*parseInt(Math.random()*50)+"px";
+			var die=0;
+			for(var j=0;j<snake1.number;j++){
+				if(this.appleDiv.style.top.match(/\d+/)[0]==snake1.body[j].style.top.match(/\d+/)[0]&&this.appleDiv.style.left.match(/\d+/)[0]==snake1.body[j].style.left.match(/\d+/)[0]){
+					die=1;
+					break;
+				}
+			}
+			if(die==0){break;}
+		}
+		document.body.appendChild(this.appleDiv);
+	}
+	function inflaction(left,top,direction){   //拐点数据结构
+		this.left=left;
+		this.top=top;
+		this.direction=direction;
+	}
+	function reload(){
+		location.href="haha.html";
+	}
+	function load(){
+		alert("开始");
+		window.num=document.getElementById("num");
+		num.value=0;
+		window.snake1=new snake(7,0);
+		snake1.create();
+		var apple1=new apple();
+		document.onkeydown=function(evt){ //通过上、下、左、右键添加拐点
+		    var ev=evt|| event;
+			switch(ev.keyCode){
+				case 13:
+				    alert("开始");
+					break;
+				case 37://左键	
+                    if(snake1.direction[0]!=3&&snake1.direction[0]!=1){	//判断头运动的方向和按键的方向是否不一致			
+                    snake1.inflaction[snake1.inflactionNum]=new inflaction(snake1.body[0].style.left.match(/\d+/)[0],snake1.body[0].style.top.match(/\d+/)[0],3);
+					snake1.inflactionNum++;}
+                    break;
+                case 38://上键
+				    if(snake1.direction[0]!=0&&snake1.direction[0]!=2){	
+                    snake1.inflaction[snake1.inflactionNum]=new inflaction(snake1.body[0].style.left.match(/\d+/)[0],snake1.body[0].style.top.match(/\d+/)[0],0);
+					snake1.inflactionNum++; }                  
+                    break;
+                case 39://右键
+				    if(snake1.direction[0]!=3&&snake1.direction[0]!=1){
+                    snake1.inflaction[snake1.inflactionNum]=new inflaction(snake1.body[0].style.left.match(/\d+/)[0],snake1.body[0].style.top.match(/\d+/)[0],1);
+					snake1.inflactionNum++;}
+                    break;
+                case 40://下键
+				    if(snake1.direction[0]!=0&&snake1.direction[0]!=2){
+                    snake1.inflaction[snake1.inflactionNum]=new inflaction(snake1.body[0].style.left.match(/\d+/)[0],snake1.body[0].style.top.match(/\d+/)[0],2);
+					snake1.inflactionNum++;}
+                    break;
+                default:
+                    break;						
+			    }
+		    }
+		interval1=setInterval(function(){
+			for(var i=0;i<snake1.number;i++){   //设置body[i]的移动方向，并删除废弃的拐点
+				for(var j=snake1.discard;j<snake1.inflactionNum;j++){
+				if(snake1.body[i].style.top.match(/\d+/)[0]==snake1.inflaction[j].top&&snake1.body[i].style.left.match(/\d+/)[0]==snake1.inflaction[j].left){
+					snake1.direction[i]=snake1.inflaction[j].direction;
+					snake1.inflactionDegree[j]++;
+					if(snake1.inflactionDegree[j]==snake1.number)snake1.discard=j+1;
+				}
+				}
+			}
+			if(snake1.body[0].style.left.match(/\d+/)[0]==apple1.appleDiv.style.left.match(/\d+/)[0]&&snake1.body[0].style.top.match(/\d+/)[0]==apple1.appleDiv.style.top.match(/\d+/)[0]){  //判断是否吃到苹果
+			    num.value=parseInt(num.value)+1;				
+				snake1.add();
+				document.body.removeChild(apple1.appleDiv);
+				apple1=new apple();
+			}
+			for(var i=0;i<snake1.number;i++){  //移动
+				switch(snake1.direction[i]){
+					case 0:
+					    if(snake1.body[i].style.top.match(/\d+/)[0]==4){clearInterval(interval1);}
+					    else{snake1.body[i].style.top=snake1.body[i].style.top.match(/\d+/)[0]-10+"px";}
+						break;
+					case 1:
+					    if(snake1.body[i].style.left.match(/\d+/)[0]==(parseInt(width/2)+245)){clearInterval(interval1);}
+					    else{snake1.body[i].style.left=parseInt(snake1.body[i].style.left.match(/\d+/)[0])+10+"px";}
+						break;
+					case 2:
+					    if(snake1.body[i].style.top.match(/\d+/)[0]==504){clearInterval(interval1);}
+					    else{snake1.body[i].style.top=parseInt(snake1.body[i].style.top.match(/\d+/)[0])+10+"px";}
+						break;
+					case 3:
+					    if(snake1.body[i].style.left.match(/\d+/)[0]==(parseInt(width/2)-255)){clearInterval(interval1);}
+					    else{snake1.body[i].style.left=snake1.body[i].style.left.match(/\d+/)[0]-10+"px";}
+						break;
+				}
+			}
+			for(var i=1;i<snake1.number;i++){  //判断是否追尾
+				if(snake1.body[0].style.left.match(/\d+/)[0]==snake1.body[i].style.left.match(/\d+/)[0]&&snake1.body[0].style.top.match(/\d+/)[0]==snake1.body[i].style.top.match(/\d+/)[0]){
+					clearInterval(interval1);alert("游戏结束！总共吃到了"+num.value+"颗苹果");
+					var div=document.createElement("button");
+					div.style.position="absolute";
+					div.style.height="30px";
+					div.style.width="120px";
+					div.style.top="239px";
+					div.style.color="#ffcc33";
+					div.style.backgroundColor="#fff";
+					div.style.border="0px";
+					div.style.left=(width/2)-60+"px";
+					div.style.fontSize="25px";
+					div.innerHTML="重新开始";
+					div.onclick=function(){window.location.href='index.html'};
+					document.body.appendChild(div);
+				}
+			}
+		},80);
+	}
+</script>
+<style>
+     *{
+	    margin:0px;
+		padding:0px;
+	 } 
+</style>
+</head>
+<body onload="load()" style="font-size:20px;color:#ffcc33">
+     <div style="position:absolute;">总个数：<input id="num" style="border:0px;font-size:20px;color:#ffcc33;margin-top:2px;width:40px"/></div>
+	 <div style="position:absolute;right:0px;top:0px"><button onclick="alert('开始')" style="font-size:20px">暂停</button>按enter键，同样暂停</div>
+    <center>
+         <div style="width:510px;height:510px;border:4px rgba(0,0,0,0.8) solid;border-radius:4px;">
+         </div>
+     </center>
+</body>
+</html>
